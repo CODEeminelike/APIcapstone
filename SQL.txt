@@ -1,0 +1,43 @@
+-- 1. Users table
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    fullName VARCHAR(100) NOT NULL,
+    age INT,
+    avatar VARCHAR(500),
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- 2. Images table
+CREATE TABLE images (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    imageName VARCHAR(255) NOT NULL,
+    imagePath VARCHAR(500) NOT NULL,
+    description TEXT,
+    userId INT NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 3. Comments table
+CREATE TABLE comments (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    content TEXT NOT NULL,
+    userId INT NOT NULL,
+    imageId INT NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (imageId) REFERENCES images(id) ON DELETE CASCADE
+);
+
+-- 4. Saved images table (n-n relationship)
+CREATE TABLE saved_images (
+    userId INT NOT NULL,
+    imageId INT NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (userId, imageId),
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (imageId) REFERENCES images(id) ON DELETE CASCADE
+);
