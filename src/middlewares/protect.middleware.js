@@ -23,8 +23,6 @@ export const protect = async (req, res, next) => {
   });
 
   if (!user) throw new UnauthorizedException("Not User");
-
   req.user = user;
-
   next();
 };

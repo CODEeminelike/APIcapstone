@@ -1,11 +1,12 @@
--- 1. Users table
+-- 1. Users table 
 CREATE TABLE users (
     id INT PRIMARY KEY AUTO_INCREMENT,
     email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
+    password VARCHAR(255),  
     fullName VARCHAR(100) NOT NULL,
     age INT,
     avatar VARCHAR(500),
+    googleId VARCHAR(255) UNIQUE,  
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
