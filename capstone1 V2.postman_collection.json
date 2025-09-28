@@ -1,0 +1,571 @@
+{
+	"info": {
+		"_postman_id": "09d5460c-e1a0-47c6-8e95-cbff3e9d746e",
+		"name": "capstone1 V2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44018499",
+		"_collection_link": "https://tung-5167015.postman.co/workspace/Tung's-Workspace~c658f7d0-98f8-4763-8e72-f7440e3addf6/collection/44018499-09d5460c-e1a0-47c6-8e95-cbff3e9d746e?action=share&source=collection_link&creator=44018499"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"user12@gmail.com\",\r\n    \"password\":\"Aa@123\",\r\n    \"fullName\":\"N T T\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{capstone}}auth/register",
+							"host": [
+								"{{capstone}}auth"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const data = pm.response.json()\r",
+									"\r",
+									"pm.globals.set(\"accessToken\",  data.data.accessToken )\r",
+									"pm.globals.set(\"refreshToken\",  data.data.refreshToken )"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "Value: session_id=abc123; user_id=456",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"user11@gmail.com\",\r\n    \"password\":\"Aa@123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{capstone}}auth/login",
+							"host": [
+								"{{capstone}}auth"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refresh-token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"accessToken\": \"{{accessToken}}\",\r\n        \"refreshToken\": \"{{refreshToken}}\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{capstone}}auth/refresh-token",
+							"host": [
+								"{{capstone}}auth"
+							],
+							"path": [
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-info",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{capstone}}auth/get-info",
+							"host": [
+								"{{capstone}}auth"
+							],
+							"path": [
+								"get-info"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "googleAuth20",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3333/api/auth/google",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"api",
+								"auth",
+								"google"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "get-profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{capstone}}user/get-profile",
+							"host": [
+								"{{capstone}}user"
+							],
+							"path": [
+								"get-profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"fullName\": \"NTTTTTTT Up\",\r\n\"age\": 11,\r\n\"avatar\": \"URRRLLLLLLLLLLLLLLLLLLL__UP\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{capstone}}user/update-profile",
+							"host": [
+								"{{capstone}}user"
+							],
+							"path": [
+								"update-profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get created-images",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"fullName\": \"NTTTTTTT\",\r\n\"age\": 81,\r\n\"avatar\": \"URRRLLLLLLLLLLLLLLLLLLL\"\r\n}"
+						},
+						"url": {
+							"raw": "{{capstone}}user/created-images",
+							"host": [
+								"{{capstone}}user"
+							],
+							"path": [
+								"created-images"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get saved-images",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{capstone}}user/saved-images",
+							"host": [
+								"{{capstone}}user"
+							],
+							"path": [
+								"saved-images"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Image",
+			"item": [
+				{
+					"name": "add-new-img",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"imageName\": \"Red Rose Classic v5\",\r\n    \"imagePath\": \"IMG_PATH_1v2\",\r\n    \"description\": \"Description123 v2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{capstone}}image",
+							"host": [
+								"{{capstone}}image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-img",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{capstone}}image/2",
+							"host": [
+								"{{capstone}}image"
+							],
+							"path": [
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add-cmt",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"content\": \"This is a beautiful photo v1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{capstone}}image/21/comments",
+							"host": [
+								"{{capstone}}image"
+							],
+							"path": [
+								"21",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "save-img",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"content\": \"This is a beautiful photo1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{capstone}}image/12/save",
+							"host": [
+								"{{capstone}}image"
+							],
+							"path": [
+								"12",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "unsave-img",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{capstone}}image/4/save",
+							"host": [
+								"{{capstone}}image"
+							],
+							"path": [
+								"4",
+								"save"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "public",
+			"item": [
+				{
+					"name": "get-all-img",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{capstone}}public/images/search?q=Sunflower&sortBy=mostComments",
+							"host": [
+								"{{capstone}}public"
+							],
+							"path": [
+								"images",
+								"search"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Sunflower"
+								},
+								{
+									"key": "sortBy",
+									"value": "mostComments"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "filter-img",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{capstone}}public/images/search?q=Red&sortBy=newest",
+							"host": [
+								"{{capstone}}public"
+							],
+							"path": [
+								"images",
+								"search"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Red"
+								},
+								{
+									"key": "sortBy",
+									"value": "newest"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "img-info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{capstone}}public/images/12",
+							"host": [
+								"{{capstone}}public"
+							],
+							"path": [
+								"images",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-cmt",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{capstone}}public/images/12/comments",
+							"host": [
+								"{{capstone}}public"
+							],
+							"path": [
+								"images",
+								"12",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

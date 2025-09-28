@@ -91,37 +91,21 @@ export const publicService = {
       );
     }
 
-    if (!q.trim() && !userId) {
-      throw new BadRequestException(
-        "Search query or user filter is required"
-      );
-    }
-
     const skip = (pageNum - 1) * limitNum;
 
-    // Build where condition - SỬA LẠI PHẦN NÀY
+    // Build where condition - CHO PHÉP KHÔNG CÓ FILTER
     const whereCondition = {
       AND: [
-        // Search condition - Sử dụng contains đơn giản
+        // Search condition (optional)
         q.trim()
           ? {
               OR: [
-                {
-                  imageName: {
-                    contains: q.trim(),
-                    // Bỏ mode: 'insensitive'
-                  },
-                },
-                {
-                  description: {
-                    contains: q.trim(),
-                    // Bỏ mode: 'insensitive'
-                  },
-                },
+                { imageName: { contains: q.trim() } },
+                { description: { contains: q.trim() } },
               ],
             }
           : {},
-        // User filter condition
+        // User filter condition (optional)
         userId ? { userId: parseInt(userId) } : {},
       ].filter((condition) => Object.keys(condition).length > 0),
     };
@@ -130,7 +114,6 @@ export const publicService = {
     let orderBy = {};
     switch (sortBy) {
       case "mostComments":
-        // Sửa lại orderBy cho aggregation
         orderBy = [
           { comments: { _count: "desc" } },
           { createdAt: "desc" },
@@ -142,16 +125,22 @@ export const publicService = {
           { createdAt: "desc" },
         ];
         break;
+      case "oldest":
+        orderBy = { createdAt: "asc" };
+        break;
       case "newest":
       default:
         orderBy = { createdAt: "desc" };
         break;
     }
 
-    // Execute search với count đơn giản - SỬA LẠI
+    // Execute search với phân trang
     const [images, total] = await Promise.all([
       prisma.images.findMany({
-        where: whereCondition,
+        where:
+          Object.keys(whereCondition).length > 0
+            ? whereCondition
+            : {},
         skip: skip,
         take: limitNum,
         orderBy: orderBy,
@@ -176,15 +165,17 @@ export const publicService = {
           },
         },
       }),
-      // Count đơn giản, không có select
       prisma.images.count({
-        where: whereCondition,
+        where:
+          Object.keys(whereCondition).length > 0
+            ? whereCondition
+            : {},
       }),
     ]);
 
     return {
       images,
-      searchQuery: q,
+      searchQuery: q || null,
       pagination: {
         currentPage: pageNum,
         limit: limitNum,

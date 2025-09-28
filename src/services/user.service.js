@@ -58,10 +58,84 @@ export const userService = {
   },
   getCreatedImages: async (req) => {
     const userId = req.user.id;
-    return "getCreatedImages";
+
+    // Lấy danh sách ảnh đã tạo bởi user
+    const createdImages = await prisma.images.findMany({
+      where: {
+        userId: userId,
+      },
+      select: {
+        id: true,
+        imageName: true,
+        imagePath: true,
+        description: true,
+        createdAt: true,
+        users: {
+          select: {
+            id: true,
+            fullName: true,
+            avatar: true,
+          },
+        },
+        _count: {
+          select: {
+            comments: true,
+            saved_images: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return createdImages;
   },
+
   getSavedImages: async (req) => {
     const userId = req.user.id;
-    return "getSavedImages";
+
+    // Lấy danh sách ảnh đã lưu bởi user
+    const savedImages = await prisma.saved_images.findMany({
+      where: {
+        userId: userId,
+      },
+      select: {
+        createdAt: true,
+        images: {
+          select: {
+            id: true,
+            imageName: true,
+            imagePath: true,
+            description: true,
+            createdAt: true,
+            users: {
+              select: {
+                id: true,
+                fullName: true,
+                avatar: true,
+              },
+            },
+            _count: {
+              select: {
+                comments: true,
+                saved_images: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    // Format lại kết quả để dễ sử dụng
+    const formattedSavedImages = savedImages.map((item) => ({
+      savedAt: item.createdAt,
+      ...item.images,
+    }));
+
+    return formattedSavedImages;
   },
 };
